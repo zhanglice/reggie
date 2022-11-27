@@ -14,13 +14,16 @@ spring:
     host: smtp.qq.com
     port: 587
     username: 1829922348@qq.com
-    password: pmkwhpsvgdeveede
+    password: pmkwhpsvgdeveede  #授权码
     default-encoding: utf-8
   redis:
     host: localhost
     port: 6379
     password:
     database: 0
+  cache:
+    redis:
+      time-to-live: 18000000 #缓存存活时间
 mybatis-plus:
   configuration:
     #在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射
@@ -30,5 +33,5 @@ mybatis-plus:
     db-config:
       id-type: ASSIGN_ID  #主键生成策略
 reggie:
-  path: D:\Temp\
+  path: D:\Temp\ #图片存放
 

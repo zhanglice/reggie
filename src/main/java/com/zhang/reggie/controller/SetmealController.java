@@ -13,6 +13,8 @@ import com.zhang.reggie.service.SetmealService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +46,7 @@ public class SetmealController {
      * @return
      */
     @PostMapping
+    @CacheEvict(value = "setmealCache",allEntries = true)//清除所有缓存
     public R<String> save(@RequestBody SetmealDto setmealDto){
 
         setmealService.saveWithDish(setmealDto);
@@ -96,6 +99,7 @@ public class SetmealController {
      * @return
      */
     @DeleteMapping
+    @CacheEvict(value = "setmealCache",allEntries = true)//清除所有缓存
     public R<String> delete(@RequestParam List<Long> ids){
         setmealService.removeWithDish(ids);
         return R.success("套餐数据删除成功");
@@ -117,6 +121,7 @@ public class SetmealController {
 
     @PutMapping
     @Transactional
+    @CacheEvict(value = "setmealCache",allEntries = true)//清除所有缓存
     public R<String> updateSetmeal(@RequestBody SetmealDto setmealDto){
         setmealService.updateById(setmealDto);
         Long id = setmealDto.getId();
@@ -136,6 +141,7 @@ public class SetmealController {
     }
 
     @PostMapping("/status/{status}")
+    @CacheEvict(value = "setmealCache",allEntries = true)//清除所有缓存
     public R<String> status(@PathVariable int status,@RequestParam List<Long> ids){
         List<Setmeal> setmeals = setmealService.listByIds(ids);
         setmeals.forEach(setmeal -> {
@@ -151,6 +157,7 @@ public class SetmealController {
      * @return
      */
     @GetMapping("/list")
+    @Cacheable(value = "setmealCache",key = "#setmeal.categoryId+'_'+#setmeal.status")
     public R<List<Setmeal>> list(Setmeal setmeal){
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(setmeal.getCategoryId()!=null,Setmeal::getCategoryId,setmeal.getCategoryId());
